@@ -8,6 +8,7 @@
 import SwiftUI
 import FirebaseAuth
 import GoogleSignIn
+import FirebaseFirestore
 
 struct SignInView: View {
     @Binding var signedIn: Bool
@@ -146,10 +147,41 @@ struct SignInView: View {
             if let error = error {
                 alertMessage = error.localizedDescription
                 showAlert = true
-            } else {
-                // Handle successful sign-in
-                signedIn = true
+            } else if let user = authResult?.user {
+                fetchUserType(userID: user.uid) { type in
+                    if let type = type {
+                        self.userType = type
+                        self.signedIn = true
+                    } else {
+                        self.alertMessage = "Account not found or unknown error."
+                    }
+                }
             }
         }
+    }
+
+    func fetchUserType(userID: String, completion: @escaping (Int?) -> Void) {
+        let db = Firestore.firestore()
+        let usersCollection = db.collection("users")
+
+        usersCollection.document(userID).getDocument { document, error in
+            if let document = document, document.exists {
+                if let data = document.data(), let userType = data["usertype"] as? Int {
+                    completion(userType)
+                } else {
+                    self.alertMessage = "User document does not contain 'usertype' field"
+                    completion(nil)
+                }
+            } else {
+                self.alertMessage = "Error fetching user document: \(error?.localizedDescription ?? "Unknown error")"
+                completion(nil)
+            }
+        }
+    }
+}
+
+struct SignInView_Previews: PreviewProvider {
+    static var previews: some View {
+        SignInView(signedIn: .constant(false), userType: .constant(nil))
     }
 }

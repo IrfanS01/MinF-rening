@@ -6,6 +6,8 @@
 //
 
 import Foundation
+import FirebaseAuth
+import FirebaseFirestore
 
 class AppViewModel: ObservableObject {
     @Published var users: [User] = []

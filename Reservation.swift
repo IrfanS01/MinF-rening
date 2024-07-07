@@ -8,13 +8,14 @@
 import Foundation
 
 struct Reservation: Identifiable {
-    var id = UUID()
+    var id: String
     var date: Date
     var type: ReservationType
 }
 
-enum ReservationType: String, CaseIterable {
+enum ReservationType: String, CaseIterable, Identifiable {
     case guestApartment = "Guest Apartment"
     case rooftopTerrace = "Rooftop Terrace"
+    
+    var id: String { self.rawValue }
 }
-

@@ -10,13 +10,13 @@ import SwiftUI
 struct ReservationView: View {
     @ObservedObject var viewModel: ReservationViewModel
     @State private var selectedDate = Date()
-    @State private var selectedType: ReservationViewModel.ReservationType = .guestApartment
+    @State private var selectedType: ReservationType = .guestApartment
 
     var body: some View {
         Form {
             DatePicker("Select Date", selection: $selectedDate, displayedComponents: .date)
             Picker("Reservation Type", selection: $selectedType) {
-                ForEach(ReservationViewModel.ReservationType.allCases, id: \.self) { type in
+                ForEach(ReservationType.allCases, id: \.self) { type in
                     Text(type.rawValue).tag(type)
                 }
             }
