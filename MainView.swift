@@ -19,21 +19,9 @@ struct MainView: View {
     var body: some View {
         VStack {
             if userType == 1 { // User
-                Text("User View")
-                NavigationLink(destination: ReservationView(viewModel: reservationViewModel)) {
-                    Text("Make a Reservation")
-                }
-                NavigationLink(destination: NotificationView(viewModel: notificationViewModel)) {
-                    Text("Send a Notification")
-                }
-            } else if userType == 2 { // Association
-                Text("Association View")
-                NavigationLink(destination: ReservationView(viewModel: reservationViewModel)) {
-                    Text("Manage Reservations")
-                }
-                NavigationLink(destination: NotificationView(viewModel: notificationViewModel)) {
-                    Text("Manage Notifications")
-                }
+                UserView(reservationViewModel: reservationViewModel, notificationViewModel: notificationViewModel)
+            } else if userType == 2 { // Association (Admin)
+                AdminView(reservationViewModel: reservationViewModel, userViewModel: userViewModel)
             } else {
                 Text("Unknown User Type")
             }
@@ -49,7 +37,7 @@ struct MainView: View {
             }
             .padding(.bottom, 20)
         }
-        .navigationTitle("Main Menu")
+        .navigationTitle("Admin Panel") 
     }
 
     private func logOut() {

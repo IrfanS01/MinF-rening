@@ -22,6 +22,32 @@ class NotificationViewModel: ObservableObject {
         saveNotificationToFirebase(notification: newNotification)
     }
 
+    func sendNotificationToAllUsers(message: String) {
+        // Retrieve all users
+        db.collection("users").getDocuments { snapshot, error in
+            if let error = error {
+                print("Error fetching users: \(error)")
+                return
+            }
+
+            guard let documents = snapshot?.documents else {
+                print("No users found")
+                return
+            }
+
+            for document in documents {
+                let userData = document.data()
+                guard let email = userData["email"] as? String else { continue }
+
+                // Send notification (this is a placeholder, you might want to implement email notification)
+                print("Sending notification to \(email): \(message)")
+            }
+        }
+        
+        // Save notification
+        addNotification(message: message)
+    }
+
     private func saveNotificationToFirebase(notification: Notification) {
         let notificationData: [String: Any] = [
             "message": notification.message,
@@ -50,13 +76,18 @@ class NotificationViewModel: ObservableObject {
 
             self.notifications = documents.compactMap { document -> Notification? in
                 let data = document.data()
-                guard let timestamp = data["date"] as? Timestamp,
-                      let message = data["message"] as? String else {
+                guard let message = data["message"] as? String,
+                      let date = (data["date"] as? Timestamp)?.dateValue() else {
                     return nil
                 }
-                let date = timestamp.dateValue()
                 return Notification(id: document.documentID, message: message, date: date)
             }
         }
+    }
+    
+    struct Notification: Identifiable {
+        var id: String
+        var message: String
+        var date: Date
     }
 }

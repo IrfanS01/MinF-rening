@@ -1,14 +1,14 @@
 //
-//  ReservationView.swift
+//  AddReservationView.swift
 //  BHFArenan
 //
-//  Created by Irfan Sarac on 2024-06-18.
+//  Created by Irfan Sarac on 2024-07-07.
 //
 
 import SwiftUI
 import FirebaseAuth
 
-struct ReservationView: View {
+struct AddReservationView: View {
     @ObservedObject var viewModel: ReservationViewModel
     @State private var selectedDate = Date()
     @State private var selectedStartTime = Date()
@@ -30,36 +30,13 @@ struct ReservationView: View {
             Button("Add Reservation") {
                 viewModel.addReservation(date: selectedDate, startTime: selectedStartTime, endTime: selectedEndTime, type: selectedType, userEmail: userEmail)
             }
-
-            Section(header: Text("Existing Reservations")) {
-                List(viewModel.reservations) { reservation in
-                    VStack(alignment: .leading) {
-                        Text(reservation.type.rawValue)
-                        Text("\(reservation.date, formatter: dateFormatter)")
-                        Text("Time: \(reservation.startTime, formatter: timeFormatter) - \(reservation.endTime, formatter: timeFormatter)")
-                        Text("User: \(reservation.userEmail)")
-                    }
-                }
-            }
         }
-        .navigationTitle("Reservations")
-    }
-
-    private var dateFormatter: DateFormatter {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .short
-        return formatter
-    }
-
-    private var timeFormatter: DateFormatter {
-        let formatter = DateFormatter()
-        formatter.timeStyle = .short
-        return formatter
+        .navigationTitle("Add Reservation")
     }
 }
 
-struct ReservationView_Previews: PreviewProvider {
+struct AddReservationView_Previews: PreviewProvider {
     static var previews: some View {
-        ReservationView(viewModel: ReservationViewModel())
+        AddReservationView(viewModel: ReservationViewModel())
     }
 }
