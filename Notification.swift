@@ -8,7 +8,7 @@
 import Foundation
 
 struct Notification: Identifiable {
-    var id = UUID()
+    var id: String
     var message: String
     var date: Date
 }
